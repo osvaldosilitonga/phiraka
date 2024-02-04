@@ -45,3 +45,30 @@ func (u *userImpl) Register(c echo.Context) error {
 
 	return utils.SuccessMessage(c, &utils.ApiCreate, nil)
 }
+
+func (u *userImpl) Login(c echo.Context) error {
+	payload := web.LoginReq{}
+
+	if err := c.Bind(&payload); err != nil {
+		return utils.ErrorMessage(c, &utils.ApiBadRequest, err.Error())
+	}
+	if err := c.Validate(&payload); err != nil {
+		return utils.ErrorMessage(c, &utils.ApiBadRequest, helpers.SplitError(err))
+	}
+
+	ctx, cancel := context.WithTimeout(c.Request().Context(), time.Second*5)
+	defer cancel()
+
+	if err := u.UserHandler.Login(ctx, payload); err != nil {
+		if strings.Contains(err.Error(), "record not found") {
+			return utils.ErrorMessage(c, &utils.ApiNotFound, err.Error())
+		}
+		if strings.Contains(err.Error(), "wrong password") {
+			return utils.ErrorMessage(c, &utils.ApiBadRequest, err.Error())
+		}
+
+		return utils.ErrorMessage(c, &utils.ApiInternalServer, err.Error())
+	}
+
+	return utils.SuccessMessage(c, &utils.ApiOk, nil)
+}

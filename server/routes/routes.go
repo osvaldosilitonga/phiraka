@@ -27,6 +27,8 @@ func Routes(e *echo.Echo) {
 				"msg": "OK",
 			})
 		})
+
 		v1.POST("/register", userController.Register)
+		v1.POST("/login", userController.Login)
 	}
 }

@@ -39,3 +39,17 @@ func (u *userImpl) Register(ctx context.Context, payload web.RegisterReq) error 
 
 	return nil
 }
+
+func (u *userImpl) Login(ctx context.Context, payload web.LoginReq) error {
+	user, err := u.UserRepo.FindByUsername(ctx, payload.Username)
+	if err != nil {
+		return err
+	}
+
+	isMatch := helpers.ComparePassword(user.Password, payload.Password)
+	if !isMatch {
+		return errors.New("wrong password")
+	}
+
+	return nil
+}

@@ -130,3 +130,27 @@ func (u *userImpl) FindAllUser(c echo.Context) error {
 
 	return utils.SuccessMessage(c, &utils.ApiOk, users)
 }
+
+func (u *userImpl) Update(c echo.Context) error {
+	username := c.Param("username")
+
+	payload := web.UpdateReq{}
+	if err := c.Bind(&payload); err != nil {
+		return utils.ErrorMessage(c, &utils.ApiBadRequest, "invalid request body")
+	}
+
+	ctx, cancel := context.WithTimeout(c.Request().Context(), time.Second*5)
+	defer cancel()
+
+	if err := u.UserHandler.Update(ctx, username, &payload); err != nil {
+		if strings.Contains(err.Error(), "record not found") {
+			return utils.ErrorMessage(c, &utils.ApiNotFound, err.Error())
+		}
+		if strings.Contains(err.Error(), "password constraint") {
+			return utils.ErrorMessage(c, &utils.ApiBadRequest, err.Error())
+		}
+		return utils.ErrorMessage(c, &utils.ApiInternalServer, nil)
+	}
+
+	return utils.SuccessMessage(c, &utils.ApiOk, "updated successfuly")
+}

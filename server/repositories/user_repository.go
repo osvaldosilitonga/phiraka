@@ -84,16 +84,16 @@ func (u *userImpl) FindAllUser(ctx context.Context) ([]entity.User, error) {
 	return users, nil
 }
 
-func (u *userImpl) UpdateUser(ctx context.Context, username, password string) error {
+func (u *userImpl) UpdateUser(ctx context.Context, username string, user entity.User) error {
 	query := `
 		UPDATE users
 		SET
 			username = $1,
 			password = $2
-		WHERE username = $1
+		WHERE username = $3
 	`
 
-	result, err := u.DB.ExecContext(ctx, query, username, password)
+	result, err := u.DB.ExecContext(ctx, query, user.Username, user.Password, username)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return errors.New("record not found")

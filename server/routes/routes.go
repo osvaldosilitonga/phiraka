@@ -39,5 +39,6 @@ func Routes(e *echo.Echo) {
 	{
 		user.DELETE("/delete/:username", userController.Delete)
 		user.GET("", userController.FindAllUser)
+		user.PUT("/:username", userController.Update)
 	}
 }

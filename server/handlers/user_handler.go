@@ -88,3 +88,31 @@ func (u *userImpl) FindAllUser(ctx context.Context) ([]web.FindAllUserResp, erro
 
 	return result, nil
 }
+
+func (u *userImpl) Update(ctx context.Context, username string, payload *web.UpdateReq) error {
+	user, err := u.UserRepo.FindByUsername(ctx, username)
+	if err != nil {
+		return err
+	}
+
+	if payload.Username != "" {
+		user.Username = payload.Username
+	}
+	if payload.Password != "" {
+		if len(payload.Password) < 5 || len(payload.Password) > 8 {
+			return errors.New("password constraint, must be between 5 - 8 character")
+		}
+
+		hash, err := helpers.HashPassword(payload.Password)
+		if err != nil {
+			return errors.New("error while hashing password")
+		}
+		user.Password = hash
+	}
+
+	if err := u.UserRepo.UpdateUser(ctx, username, user); err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -8,4 +8,5 @@ type User interface {
 	Logout(c echo.Context) error
 	Delete(c echo.Context) error
 	FindAllUser(c echo.Context) error
+	Update(c echo.Context) error
 }

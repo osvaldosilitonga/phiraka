@@ -11,4 +11,5 @@ type User interface {
 	Login(ctx context.Context, payload web.LoginReq) (string, error)
 	Delete(ctx context.Context, username string) error
 	FindAllUser(ctx context.Context) ([]web.FindAllUserResp, error)
+	Update(ctx context.Context, username string, payload *web.UpdateReq) error
 }

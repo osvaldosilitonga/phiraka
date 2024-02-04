@@ -19,11 +19,11 @@ func NewUserRepository(db *sql.DB) User {
 
 func (u *userImpl) Save(ctx context.Context, user *entity.User) error {
 	query := `
-		INSERT INTO users(username, password, create_time)
-		VALUES ($1, $2, $3)
+		INSERT INTO users(username, password)
+		VALUES ($1, $2)
 	`
 
-	_, err := u.DB.ExecContext(ctx, query, user.Username, user.Password, user.CreateTime)
+	_, err := u.DB.ExecContext(ctx, query, user.Username, user.Password)
 	if err != nil {
 		return err
 	}

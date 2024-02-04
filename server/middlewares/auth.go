@@ -28,7 +28,7 @@ func RequireAuth(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			c.Set("username", claims)
+			c.Set("username", claims["username"].(string))
 			return next(c)
 		}
 		return utils.ErrorMessage(c, &utils.ApiUnauthorized, "Please log in to access this page")

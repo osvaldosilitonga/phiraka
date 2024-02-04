@@ -115,3 +115,18 @@ func (u *userImpl) Delete(c echo.Context) error {
 
 	return utils.SuccessMessage(c, &utils.ApiDelete, nil)
 }
+
+func (u *userImpl) FindAllUser(c echo.Context) error {
+	ctx, cancel := context.WithTimeout(c.Request().Context(), time.Second*5)
+	defer cancel()
+
+	users, err := u.UserHandler.FindAllUser(ctx)
+	if err != nil {
+		return utils.ErrorMessage(c, &utils.ApiInternalServer, nil)
+	}
+	if len(users) == 0 {
+		return utils.ErrorMessage(c, &utils.ApiNotFound, "empty data")
+	}
+
+	return utils.SuccessMessage(c, &utils.ApiOk, users)
+}

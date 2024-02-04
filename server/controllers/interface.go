@@ -7,4 +7,5 @@ type User interface {
 	Login(c echo.Context) error
 	Logout(c echo.Context) error
 	Delete(c echo.Context) error
+	FindAllUser(c echo.Context) error
 }

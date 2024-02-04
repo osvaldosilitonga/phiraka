@@ -67,3 +67,24 @@ func (u *userImpl) Delete(ctx context.Context, username string) error {
 
 	return nil
 }
+
+func (u *userImpl) FindAllUser(ctx context.Context) ([]web.FindAllUserResp, error) {
+	result := []web.FindAllUserResp{}
+
+	users, err := u.UserRepo.FindAllUser(ctx)
+	if err != nil {
+		return result, err
+	}
+
+	for _, v := range users {
+		usr := web.FindAllUserResp{
+			Username:   v.Username,
+			Password:   v.Password,
+			CreateTime: v.CreateTime,
+		}
+
+		result = append(result, usr)
+	}
+
+	return result, nil
+}

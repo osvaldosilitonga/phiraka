@@ -64,10 +64,6 @@ func (u *userImpl) FindAllUser(ctx context.Context) ([]entity.User, error) {
 
 	rows, err := u.DB.QueryContext(ctx, query)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return users, errors.New("record not found")
-		}
-
 		return users, err
 	}
 	defer rows.Close()

@@ -13,3 +13,11 @@ type LoginReq struct {
 type DeleteReq struct {
 	Username string `json:"username" validate:"required,min=4,max=128"`
 }
+
+// ----------------------------------------------------------------------------
+
+type FindAllUserResp struct {
+	Username   string `json:"username"`
+	Password   string `json:"password"`
+	CreateTime string `json:"create_time"`
+}

@@ -84,6 +84,19 @@ func (u *userImpl) Login(c echo.Context) error {
 	return utils.SuccessMessage(c, &utils.ApiOk, nil)
 }
 
+func (u *userImpl) Logout(c echo.Context) error {
+	cookie := new(http.Cookie)
+	cookie.Name = "Authorization"
+	cookie.HttpOnly = true
+	cookie.Path = "/"
+	cookie.Value = ""
+	cookie.SameSite = http.SameSiteLaxMode
+	cookie.MaxAge = -1
+	c.SetCookie(cookie)
+
+	return utils.SuccessMessage(c, &utils.ApiOk, nil)
+}
+
 func (u *userImpl) Delete(c echo.Context) error {
 	username := strings.ToLower(c.Param("username"))
 	if len(username) < 4 || len(username) > 128 {

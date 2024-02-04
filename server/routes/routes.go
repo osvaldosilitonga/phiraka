@@ -30,6 +30,7 @@ func Routes(e *echo.Echo) {
 
 		v1.POST("/register", userController.Register)
 		v1.POST("/login", userController.Login)
+		v1.GET("/logout", userController.Logout)
 		v1.DELETE("/delete/:username", userController.Delete)
 	}
 }

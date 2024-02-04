@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"net/http"
 	"strings"
 	"time"
 
@@ -59,7 +60,8 @@ func (u *userImpl) Login(c echo.Context) error {
 	ctx, cancel := context.WithTimeout(c.Request().Context(), time.Second*5)
 	defer cancel()
 
-	if err := u.UserHandler.Login(ctx, payload); err != nil {
+	token, err := u.UserHandler.Login(ctx, payload)
+	if err != nil {
 		if strings.Contains(err.Error(), "record not found") {
 			return utils.ErrorMessage(c, &utils.ApiNotFound, err.Error())
 		}
@@ -69,6 +71,15 @@ func (u *userImpl) Login(c echo.Context) error {
 
 		return utils.ErrorMessage(c, &utils.ApiInternalServer, err.Error())
 	}
+
+	// Set session cookie
+	cookie := new(http.Cookie)
+	cookie.Name = "Authorization"
+	cookie.HttpOnly = true
+	cookie.Path = "/"
+	cookie.Value = token
+	cookie.Expires = time.Now().Add(5 * time.Hour)
+	c.SetCookie(cookie)
 
 	return utils.SuccessMessage(c, &utils.ApiOk, nil)
 }

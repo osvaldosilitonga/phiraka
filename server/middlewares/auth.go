@@ -24,7 +24,7 @@ func RequireAuth(next echo.HandlerFunc) echo.HandlerFunc {
 			return []byte(os.Getenv("JWT_TOKEN_SECRET")), nil
 		})
 		if err != nil {
-			return utils.ErrorMessage(c, &utils.ApiUnauthorized, err)
+			return utils.ErrorMessage(c, &utils.ApiUnauthorized, "Token invalid")
 		}
 
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {

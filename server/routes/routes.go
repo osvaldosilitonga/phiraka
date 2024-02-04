@@ -5,6 +5,7 @@ import (
 	"github.com/osvaldosilitonga/phiraka/server/configs"
 	"github.com/osvaldosilitonga/phiraka/server/controllers"
 	"github.com/osvaldosilitonga/phiraka/server/handlers"
+	"github.com/osvaldosilitonga/phiraka/server/middlewares"
 	"github.com/osvaldosilitonga/phiraka/server/repositories"
 )
 
@@ -34,6 +35,7 @@ func Routes(e *echo.Echo) {
 	}
 
 	user := v1.Group("/user")
+	user.Use(middlewares.RequireAuth)
 	{
 		user.DELETE("/delete/:username", userController.Delete)
 		user.GET("", userController.FindAllUser)

@@ -120,12 +120,14 @@ func (u *userImpl) DeleteUser(ctx context.Context, username string) error {
 		WHERE username = $1
 	`
 
-	_, err := u.DB.ExecContext(ctx, query, username)
+	result, err := u.DB.ExecContext(ctx, query, username)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return errors.New("record not found")
-		}
 		return err
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected < 1 {
+		return errors.New("record not found")
 	}
 
 	return nil

@@ -1,34 +1,44 @@
 package handlers
 
-import "fmt"
+import "errors"
 
-func Fibonacci(row, col int) {
+func Fibonacci(row, col int) (map[int][]int, error) {
+	if row < 1 || col < 1 {
+		return nil, errors.New("row or colum must be greater than 0")
+	}
+
 	dataLen := row * col
-	fibonacci := []int{}
+	fibonacci := []int{0, 1}
 
 	// cari data fibonaci sebanyak dataLen
-	fibonacci = append(fibonacci, 0, 1)
 	for i := 2; i < dataLen; i++ {
 		f := fibonacci[i-1] + fibonacci[i-2]
 		fibonacci = append(fibonacci, f)
 	}
 
-	fmt.Println(fibonacci)
-
-	// masukkan ke dalam result [][]int
 	result := map[int][]int{}
-	r := 0
-	c := 0
+	f := 0
 
-	for _, v := range fibonacci {
-		result[r] = append(result[r], v)
-		if c < col-1 {
-			c++
-		} else {
-			c = 0
-			r++
+	for r := 0; r < row; r++ {
+		for c := 0; c < col; c++ {
+			result[r] = append(result[r], fibonacci[f])
+			f++
 		}
 	}
 
-	fmt.Println(result)
+	return result, nil
 }
+
+// Solusi 2
+// masukkan ke dalam result [][]int
+// r := 0
+// c := 0
+// for _, v := range fibonacci {
+// 	result[r] = append(result[r], v)
+// 	if c < col-1 {
+// 		c++
+// 	} else {
+// 		c = 0
+// 		r++
+// 	}
+// }

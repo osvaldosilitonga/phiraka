@@ -53,3 +53,11 @@ func (u *userImpl) Login(ctx context.Context, payload web.LoginReq) error {
 
 	return nil
 }
+
+func (u *userImpl) Delete(ctx context.Context, username string) error {
+	if err := u.UserRepo.DeleteUser(ctx, username); err != nil {
+		return err
+	}
+
+	return nil
+}

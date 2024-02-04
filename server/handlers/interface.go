@@ -9,4 +9,5 @@ import (
 type User interface {
 	Register(ctx context.Context, payload web.RegisterReq) error
 	Login(ctx context.Context, payload web.LoginReq) error
+	Delete(ctx context.Context, username string) error
 }

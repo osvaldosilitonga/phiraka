@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/osvaldosilitonga/phiraka/server/configs"
@@ -22,6 +23,12 @@ func main() {
 	defer configs.InitDB().Close()
 
 	e := echo.New()
+
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*", "localhost:8080"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+	}))
 
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
